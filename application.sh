@@ -94,10 +94,12 @@ set_jdbc_url() {
 
 set_jdbc_url "$DATABASE_URL" "JDBC_DATABASE"
 
+SECRET=$(</dev/urandom tr -dc _A-Z-a-z-0-9 | head -c40)
+
 # replace
 
 sed -i "s/data\.path\=.*/data\.path\=\/usr\/share\/oboco\/data/" user.properties
-sed -i "s/security\.authentication\.secret\=.*/security\.authentication\.secret\=4zM2ee4DDANKgYOJDfw2iIuK133QijwbBogUgqIN/" application.properties
+sed -i "s/security\.authentication\.secret\=.*/security\.authentication\.secret\=${SECRET}/" application.properties
 sed -i "s/server\.port\=.*/server\.port\=${PORT}/" application.properties
 
 # start
