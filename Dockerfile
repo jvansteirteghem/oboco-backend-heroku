@@ -33,30 +33,15 @@ RUN mvn -f /usr/src/oboco/pom.xml -Pnative clean package
 FROM registry.access.redhat.com/ubi8/ubi-minimal
 
 RUN microdnf update
-RUN microdnf install wget zip
+RUN microdnf install wget zip jq
 
 RUN mkdir "/usr/share/oboco" \
 && mkdir "/usr/share/oboco/data" \
 && mkdir "/tmp/oboco"
 
-RUN mkdir "/tmp/oboco/Pepper and Carrot" \
-&& mkdir "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight" \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight/00.jpg" https://www.peppercarrot.com/0_sources/ep01_Potion-of-Flight/low-res/en_Pepper-and-Carrot_by-David-Revoy_E01P00.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight/01.jpg" https://www.peppercarrot.com/0_sources/ep01_Potion-of-Flight/low-res/en_Pepper-and-Carrot_by-David-Revoy_E01P01.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight/02.jpg" https://www.peppercarrot.com/0_sources/ep01_Potion-of-Flight/low-res/en_Pepper-and-Carrot_by-David-Revoy_E01P02.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight/03.jpg" https://www.peppercarrot.com/0_sources/ep01_Potion-of-Flight/low-res/en_Pepper-and-Carrot_by-David-Revoy_E01P03.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight/04.jpg" https://www.peppercarrot.com/0_sources/ep01_Potion-of-Flight/low-res/en_Pepper-and-Carrot_by-David-Revoy_E01P04.jpg \
-&& mkdir "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions" \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/00.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P00.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/01.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P01.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/02.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P02.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/03.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P03.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/04.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P04.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/05.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P05.jpg \
-&& wget -O "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions/06.jpg" https://www.peppercarrot.com/0_sources/ep02_Rainbow-potions/low-res/en_Pepper-and-Carrot_by-David-Revoy_E02P06.jpg \
-&& mkdir "/usr/share/oboco/data/Pepper and Carrot" \
-&& zip -r "/usr/share/oboco/data/Pepper and Carrot/Episode 1 - The Potion of Flight.zip" "/tmp/oboco/Pepper and Carrot/Episode 1 - The Potion of Flight" \
-&& zip -r "/usr/share/oboco/data/Pepper and Carrot/Episode 2 - Rainbow Potions.zip" "/tmp/oboco/Pepper and Carrot/Episode 2 - Rainbow Potions"
+COPY data.sh /tmp/oboco/data.sh
+
+RUN sh /tmp/oboco/data.sh
 
 RUN rm -rf "/tmp/oboco"
 
