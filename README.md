@@ -24,8 +24,8 @@
 		- heroku pg:info --app oboco-backend
 		- heroku pg:credentials:url DATABASE --app oboco-backend
 		- connect to postgresql
-		- execute database_postgresql.ddl
-		- execute database_postgresql.sql
+		- execute oboco-backend/src/non-packaged-resources/database_postgresql.ddl
+		- execute oboco-backend/src/non-packaged-resources/database_postgresql.sql
 
 ## build
 
