@@ -102,4 +102,4 @@ sed -i "s/server\.port\=.*/server\.port\=${PORT}/" application.properties
 
 # start
 
-./application -Dquarkus.http.host=0.0.0.0 -Dquarkus.datasource.jdbc.url=$JDBC_DATABASE_URL -Dquarkus.datasource.username=$JDBC_DATABASE_USERNAME -Dquarkus.datasource.password=$JDBC_DATABASE_PASSWORD
+./application -Dquarkus.http.host=0.0.0.0 -Dquarkus.datasource.jdbc.url=$JDBC_DATABASE_URL -Dquarkus.datasource.username=$JDBC_DATABASE_USERNAME -Dquarkus.datasource.password=$JDBC_DATABASE_PASSWORD --start=DEFAULT
