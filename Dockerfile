@@ -25,7 +25,10 @@ RUN mvn --version
 COPY oboco-backend/pom.xml /usr/src/oboco/
 RUN mvn -f /usr/src/oboco/pom.xml -B de.qaware.maven:go-offline-maven-plugin:1.2.5:resolve-dependencies
 COPY oboco-backend/src /usr/src/oboco/src
-COPY application.properties /usr/src/oboco/src/main/resources
+RUN sed -i "s/quarkus\.datasource\.db\-kind\=.*/quarkus\.datasource\.db\-kind\=postgresql/" /usr/src/oboco/src/main/resources/application.properties \
+ && sed -i "s/quarkus\.datasource\.username\=.*/quarkus\.datasource\.username\=/" /usr/src/oboco/src/main/resources/application.properties \
+ && sed -i "s/quarkus\.datasource\.password\=.*/quarkus\.datasource\.password\=/" /usr/src/oboco/src/main/resources/application.properties \
+ && sed -i "s/quarkus\.datasource\.jdbc\.url\=.*/quarkus\.datasource\.jdbc\.url\=/" /usr/src/oboco/src/main/resources/application.properties
 COPY oboco-backend/src/non-packaged-resources/lib-native/turbojpeg/linux/amd64/libturbojpeg.so /usr/java/packages/lib/libturbojpeg.so
 RUN mvn -f /usr/src/oboco/pom.xml -Pnative clean package
 
