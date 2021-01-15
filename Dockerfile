@@ -71,4 +71,4 @@ RUN chmod 775 /usr/local/oboco /usr/local/oboco/application \
 EXPOSE 8080
 USER 1001
 
-CMD ["bash","/usr/local/bin/application.sh"]
+CMD ["bash", "/usr/local/bin/application.sh"]

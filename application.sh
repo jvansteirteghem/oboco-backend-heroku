@@ -96,10 +96,14 @@ set_jdbc_url "$DATABASE_URL" "JDBC_DATABASE"
 
 # replace
 
-sed -i "s/data\.path\=.*/data\.path\=\/usr\/share\/oboco\/data/" user.properties
-sed -i "s/security\.authentication\.secret\=.*/security\.authentication\.secret\=${SECRET}/" application.properties
-sed -i "s/server\.port\=.*/server\.port\=${PORT}/" application.properties
-
 # start
 
-./application -Dquarkus.http.host=0.0.0.0 -Dquarkus.datasource.jdbc.url=$JDBC_DATABASE_URL -Dquarkus.datasource.username=$JDBC_DATABASE_USERNAME -Dquarkus.datasource.password=$JDBC_DATABASE_PASSWORD --start=DEFAULT
+./application -Dquarkus.http.host=0.0.0.0 \
+ application.security.authentication.secret=${SECRET} \
+ application.server.port=${PORT} \
+ application.database.url=${JDBC_DATABASE_URL} \
+ application.database.user.name=${JDBC_DATABASE_USERNAME} \
+ application.database.user.password=${JDBC_DATABASE_PASSWORD} \
+ application.data.path=/usr/local/oboco/data \
+ user.data.path=/usr/share/oboco/data \
+ start=DEFAULT
