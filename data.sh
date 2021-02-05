@@ -20,15 +20,27 @@ do
 	pages=$(jq -r ".pages" <<< "$episode");
 	total_pages=$(jq -r ".total_pages" <<< "$episode");
 	page=$(jq -r ".cover" <<< "$pages");
+	page_number=0;
 	
-	wget -O "/tmp/oboco/Pepper And Carrot/${episode_name}/0.jpg" "https://www.peppercarrot.com/0_sources/${name}/low-res/$page"
+	wget -O "/tmp/oboco/Pepper And Carrot/${episode_name}/${page_number}.jpg" "https://www.peppercarrot.com/0_sources/${name}/low-res/$page"
 	
-	for ((page_number = 1; page_number <= $total_pages - 1; page_number = page_number + 1));
+	page=$(jq -r ".title" <<< "$pages");
+	page_number=$((page_number + 1));
+	
+	wget -O "/tmp/oboco/Pepper And Carrot/${episode_name}/${page_number}.jpg" "https://www.peppercarrot.com/0_sources/${name}/low-res/en_$page"
+	
+	for ((i = 1; i <= $total_pages - 1; i = i + 1));
 	do
-		page=$(jq -r ".\"$page_number\"" <<< "$pages");
+		page=$(jq -r ".\"$i\"" <<< "$pages");
+		page_number=$((page_number + 1));
 		
 		wget -O "/tmp/oboco/Pepper And Carrot/${episode_name}/${page_number}.jpg" "https://www.peppercarrot.com/0_sources/${name}/low-res/en_$page"
 	done;
+	
+	page=$(jq -r ".credits" <<< "$pages");
+	page_number=$((page_number + 1));
+	
+	wget -O "/tmp/oboco/Pepper And Carrot/${episode_name}/${page_number}.jpg" "https://www.peppercarrot.com/0_sources/${name}/low-res/en_$page"
 	
 	zip -r "/usr/share/oboco/data/Pepper And Carrot (D.Revoy, CC-By)/${episode_name}.zip" "/tmp/oboco/Pepper And Carrot/${episode_name}"
 done;

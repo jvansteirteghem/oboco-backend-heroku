@@ -98,7 +98,7 @@ set_jdbc_url "$DATABASE_URL" "JDBC_DATABASE"
 
 # start
 
-./application -Dquarkus.http.host=0.0.0.0 \
+./application \
  application.security.authentication.secret=${SECRET} \
  application.server.port=${PORT} \
  application.database.url=${JDBC_DATABASE_URL} \
