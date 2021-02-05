@@ -16,6 +16,7 @@
 - heroku
 	- create app oboco-backend
 		- heroku login
+		- heroku config:set TZ=Europe/Brussels --app oboco-backend
 		- heroku config:set SECRET=secret --app oboco-backend
 		- heroku config --app oboco-backend
 	- add heroku-postgresql to oboco-backend
