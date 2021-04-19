@@ -1,12 +1,14 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM ubuntu:18.04 AS build
 
+RUN apt-get clean
+RUN apt-get autoclean
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install gcc zlib1g-dev build-essential wget libjpeg-dev
+RUN apt-get -y install gcc zlib1g-dev build-essential wget
 
-RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-20.3.0.0.Beta2/mandrel-java11-linux-amd64-20.3.0.0.Beta2.tar.gz -P /tmp
-RUN tar xf /tmp/mandrel-java11-linux-amd64-20.3.0.0.Beta2.tar.gz -C /opt
-RUN ln -s /opt/mandrel-java11-20.3.0.0.Beta2 /opt/mandrel-java11
+RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-21.0.0.0.Final/mandrel-java11-linux-amd64-21.0.0.0.Final.tar.gz -P /tmp
+RUN tar xf /tmp/mandrel-java11-linux-amd64-21.0.0.0.Final.tar.gz -C /opt
+RUN ln -s /opt/mandrel-java11-21.0.0.0.Final /opt/mandrel-java11
 
 ENV JAVA_HOME=/opt/mandrel-java11
 ENV GRAALVM_HOME=/opt/mandrel-java11
@@ -52,14 +54,15 @@ RUN mkdir "/usr/local/oboco"
 
 WORKDIR /usr/local/oboco
 COPY --from=build /usr/src/oboco/target/*-runner /usr/local/oboco/application
-COPY --from=build /usr/src/oboco/target/application.properties /usr/local/oboco/application.properties
-COPY --from=build /usr/src/oboco/target/user.properties /usr/local/oboco/user.properties
 COPY --from=build /usr/src/oboco/target/data /usr/local/oboco/data
 COPY --from=build /usr/src/oboco/target/data.csv /usr/local/oboco/data.csv
 COPY --from=build /usr/src/oboco/target/logs /usr/local/oboco/logs
 COPY --from=build /usr/src/oboco/target/lib-native /usr/local/oboco/lib-native
 
-COPY application.sh /usr/local/bin/
+COPY application.properties /usr/local/oboco/application.properties
+COPY data.properties /usr/local/oboco/data.properties
+
+COPY application.sh /usr/local/bin/application.sh
 RUN chmod 777 /usr/local/bin/application.sh
 
 # set up permissions for user `1001`

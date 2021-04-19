@@ -99,11 +99,9 @@ set_jdbc_url "$DATABASE_URL" "JDBC_DATABASE"
 # start
 
 ./application \
- application.security.authentication.secret=${SECRET} \
- application.server.port=${PORT} \
- application.database.url=${JDBC_DATABASE_URL} \
- application.database.user.name=${JDBC_DATABASE_USERNAME} \
- application.database.user.password=${JDBC_DATABASE_PASSWORD} \
- application.data.path=/usr/local/oboco/data \
- user.data.path=/usr/share/oboco/data \
+ security.authentication.secret=${SECRET} \
+ server.port=${PORT} \
+ database.url=${JDBC_DATABASE_URL} \
+ database.user.name=${JDBC_DATABASE_USERNAME} \
+ database.user.password=${JDBC_DATABASE_PASSWORD} \
  start=DEFAULT
