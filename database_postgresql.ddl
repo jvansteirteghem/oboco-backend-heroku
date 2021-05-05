@@ -13,6 +13,13 @@ alter table bookMarkReferences add constraint bookMarkReferenceUserIdBookIdBookM
 create index bookMarkFileId on bookMarks (fileId);
 create index bookFileId on books (fileId);
 create index bookFilePath on books (filePath);
+create index bookNumber on books (number);
+create index bookCollectionNumber on bookCollections (number);
+create index bookUpdateDate on books (updateDate);
+create index bookCollectionUpdateDate on bookCollections (updateDate);
+create index bookMarkReferenceUpdateDate on bookMarkReferences (updateDate);
+create index bookMarkUpdateDate on bookMarks (updateDate);
+create index userUpdateDate on users (updateDate);
 alter table users add constraint userName unique (name);
 alter table users add constraint FKe9gb0v3dtxns6rgtd7bv5ri1h foreign key (rootBookCollectionId) references bookCollections(id);
 alter table bookCollections add constraint FKiufb5ykonq8jxly61he6muql0 foreign key (rootBookCollectionId) references bookCollections(id) on delete cascade;
