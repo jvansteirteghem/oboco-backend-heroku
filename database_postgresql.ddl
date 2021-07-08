@@ -26,7 +26,7 @@ create index bookMarkUpdateDate on bookMarks (updateDate);
 create index userCreateDate on users (createDate);
 create index userUpdateDate on users (updateDate);
 alter table users add constraint userName unique (name);
-alter table users add constraint FKe9gb0v3dtxns6rgtd7bv5ri1h foreign key (rootBookCollectionId) references bookCollections(id);
+alter table users add constraint FKe9gb0v3dtxns6rgtd7bv5ri1h foreign key (rootBookCollectionId) references bookCollections(id) on delete set null;
 alter table bookCollections add constraint FKiufb5ykonq8jxly61he6muql0 foreign key (rootBookCollectionId) references bookCollections(id) on delete cascade;
 alter table bookCollections add constraint FKiufb3ykonq6jxly95he6muql0 foreign key (parentBookCollectionId) references bookCollections(id) on delete cascade;
 alter table childBookCollections add constraint FKiufb9ykonq1jxly91he9muql0 foreign key (bookCollectionId) references bookCollections(id) on delete cascade;
