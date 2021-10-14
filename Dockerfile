@@ -6,9 +6,9 @@ RUN apt-get autoclean
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y install gcc zlib1g-dev build-essential wget
 
-RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-21.0.0.0.Final/mandrel-java11-linux-amd64-21.0.0.0.Final.tar.gz -P /tmp
-RUN tar xf /tmp/mandrel-java11-linux-amd64-21.0.0.0.Final.tar.gz -C /opt
-RUN ln -s /opt/mandrel-java11-21.0.0.0.Final /opt/mandrel-java11
+RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-21.2.0.0-Final/mandrel-java11-linux-amd64-21.2.0.0-Final.tar.gz -P /tmp
+RUN tar xf /tmp/mandrel-java11-linux-amd64-21.2.0.0-Final.tar.gz -C /opt
+RUN ln -s /opt/mandrel-java11-21.2.0.0-Final /opt/mandrel-java11
 
 ENV JAVA_HOME=/opt/mandrel-java11
 ENV GRAALVM_HOME=/opt/mandrel-java11
