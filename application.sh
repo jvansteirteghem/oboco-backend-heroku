@@ -99,8 +99,8 @@ set_jdbc_url "$DATABASE_URL" "JDBC_DATABASE"
 # start
 
 ./application \
- security.authentication.secret=${SECRET} \
  server.port=${PORT} \
+ server.authentication.secret=${SECRET} \
  database.url=${JDBC_DATABASE_URL} \
  database.user.name=${JDBC_DATABASE_USERNAME} \
  database.user.password=${JDBC_DATABASE_PASSWORD} \
