@@ -4,11 +4,11 @@ FROM ubuntu:18.04 AS build
 RUN apt-get clean
 RUN apt-get autoclean
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install gcc zlib1g-dev build-essential wget
+RUN apt-get -y install build-essential libz-dev zlib1g-dev wget libfreetype6-dev
 
-RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-21.2.0.0-Final/mandrel-java11-linux-amd64-21.2.0.0-Final.tar.gz -P /tmp
-RUN tar xf /tmp/mandrel-java11-linux-amd64-21.2.0.0-Final.tar.gz -C /opt
-RUN ln -s /opt/mandrel-java11-21.2.0.0-Final /opt/mandrel-java11
+RUN wget https://github.com/graalvm/mandrel/releases/download/mandrel-21.3.0.0-Final/mandrel-java11-linux-amd64-21.3.0.0-Final.tar.gz -P /tmp
+RUN tar xf /tmp/mandrel-java11-linux-amd64-21.3.0.0-Final.tar.gz -C /opt
+RUN ln -s /opt/mandrel-java11-21.3.0.0-Final /opt/mandrel-java11
 
 ENV JAVA_HOME=/opt/mandrel-java11
 ENV GRAALVM_HOME=/opt/mandrel-java11
@@ -31,14 +31,13 @@ RUN sed -i "s/quarkus\.datasource\.db\-kind\=.*/quarkus\.datasource\.db\-kind\=p
  && sed -i "s/quarkus\.datasource\.username\=.*/quarkus\.datasource\.username\=/" /usr/src/oboco/src/main/resources/application.properties \
  && sed -i "s/quarkus\.datasource\.password\=.*/quarkus\.datasource\.password\=/" /usr/src/oboco/src/main/resources/application.properties \
  && sed -i "s/quarkus\.datasource\.jdbc\.url\=.*/quarkus\.datasource\.jdbc\.url\=/" /usr/src/oboco/src/main/resources/application.properties
-COPY oboco-backend/src/non-packaged-resources/lib-native/turbojpeg/linux/amd64/libturbojpeg.so /usr/java/packages/lib/libturbojpeg.so
 RUN mvn -f /usr/src/oboco/pom.xml -Pnative clean package
 
-## Stage 2 : create the docker final image
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+## Stage 2 : build dependencies
+FROM registry.access.redhat.com/ubi8/ubi-minimal as build-dependencies
 
 RUN microdnf update
-RUN microdnf install wget zip jq
+RUN microdnf install freetype fontconfig wget zip jq
 
 RUN mkdir "/usr/share/oboco" \
 && mkdir "/usr/share/oboco/data" \
@@ -49,6 +48,39 @@ COPY data.sh /tmp/oboco/data.sh
 RUN sh /tmp/oboco/data.sh
 
 RUN rm -rf "/tmp/oboco"
+
+## Stage 3 : create the docker final image
+FROM quay.io/quarkus/quarkus-micro-image:1.0
+
+COPY --from=build-dependencies \
+   /lib64/libfreetype.so.6 \
+   /lib64/libgcc_s.so.1 \
+   /lib64/libbz2.so.1 \
+   /lib64/libpng16.so.16 \
+   /lib64/libm.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libexpat.so.1 \
+   /lib64/libuuid.so.1 \
+   /lib64/
+
+COPY --from=build-dependencies \
+   /usr/lib64/libfontconfig.so.1 \
+   /usr/lib64/
+
+COPY --from=build-dependencies \
+    /usr/share/fonts /usr/share/fonts
+
+COPY --from=build-dependencies \
+    /usr/share/fontconfig /usr/share/fontconfig
+
+COPY --from=build-dependencies \
+    /usr/lib/fontconfig /usr/lib/fontconfig
+
+COPY --from=build-dependencies \
+     /etc/fonts /etc/fonts
+
+RUN mkdir "/usr/share/oboco"
+COPY --from=build-dependencies /usr/share/oboco /usr/share/oboco
 
 RUN mkdir "/usr/local/oboco"
 
